@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout1"
+        android:padding="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ivCall"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:src="@drawable/phone"
+            app:tint="@color/bluenew"
+            android:paddingVertical="@dimen/_4sdp"
+          />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/ivCall"
+                android:layout_toStartOf="@+id/tv_time"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_20sdp"
+                    android:text="Connected"
+                    android:fontFamily="@font/roboto_medium"
+                    android:gravity="center"
+                    android:backgroundTint="@color/light_red"
+                    android:background="@drawable/status_shape"
+                    android:textSize="@dimen/_12ssp"
+                    android:textColor="@color/black"
+                    android:paddingHorizontal="@dimen/_10sdp"/>
+                <TextView
+                    android:id="@+id/tv_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Connected"
+                    android:gravity="start"
+                    android:textSize="@dimen/_12ssp"
+                    android:fontFamily="@font/roboto_medium"
+                    android:textColor="@color/black"
+                   />
+            </LinearLayout>
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_20sdp"
+            android:text="Connected"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:textSize="@dimen/_10ssp"
+            android:layout_gravity="end"
+            android:backgroundTint="@color/light_red"
+            android:background="@drawable/status_shape"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="@font/roboto_medium"
+            android:layout_centerInParent="true"
+            android:textColor="@color/black"
+        />
+
+    </RelativeLayout>
+<View
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_1sdp"
+    android:layout_marginTop="@dimen/_2sdp"
+    android:visibility="visible"
+    app:layout_constraintTop_toBottomOf="@+id/layout1"
+    android:background="@color/gray"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

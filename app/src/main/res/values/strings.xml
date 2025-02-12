@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Tele CRM</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="create_password">Create password</string>
+    <string name="enter_your_email_id">Enter your email id</string>
+    <string name="email">Email</string>
+    <string name="dump_ugly_excels_use">Dump ugly excels, use</string>
+    <string name="create_account">Create Account</string>
+    <string name="sign_up_login_with_google">Sign up / Login with Google</string>
+    <string name="remember_password">Remember Password?</string>
+    <string name="an_email_will_be_sent_containing_a_link_to_reset_your_password">An email will be sent containing a link to reset your password.</string>
+    <string name="send_recovery_email">Send Recovery Email</string>
+    <string name="password">Password</string>
+    <string name="log_in">Log In</string>
+    <string name="or">OR</string>
+    <string name="read_more">Read More</string>
+    <string name="show_less">Show Less</string>
+    <string name="network_error">Network Error</string>
+    <string name="not_connected_internet">Not Connected to internet</string>
+    <string name="retry">Retry</string>
+    <string name="do_you_want_to_logout_from_the">Do you want to logout from the\napplication?</string>
+    <string name="mobile_number_cannot_be_empty">Mobile number cannot be empty</string>
+    <string name="please_enter_a_valid_mobile_number">Mobile number should vary between 8 to 13 digits</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="leaderboard">LeaderBoard</string>
+    <string name="add_leads">Add Leads</string>
+    <string name="refresh">Refresh</string>
+    <string name="tab_icon">Tab Icon</string>
+    <string name="show_fields">Show Fields</string>
+    <string name="add_lead">Add Lead</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="server_not_responding">Server not responding</string>
+    <string name="logout">LogOut</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="close">Close</string>
+    <string name="no_data_image">NoData</string>
+</resources>

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
+
+    <action
+        android:id="@+id/goToHome"
+        app:destination="@id/leadFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true"
+        app:enterAnim="@anim/nav_slide_in_left"
+        app:exitAnim="@anim/nav_slide_out_left"
+        />
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:label="Splash"
+        android:name="com.tele.crm.presentation.splash.SplashFragment"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_leadFragment"
+            app:destination="@id/leadFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:label="Login Fragment"
+        android:name="com.tele.crm.presentation.auth.login.LoginFragment"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_loginFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_loginFragment_to_ForgotFragment"
+            app:destination="@id/ForgotFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+        <action
+            android:id="@+id/action_loginFragment_to_leadFragment"
+            app:destination="@id/leadFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_loginFragment_to_ForgotFragment2"
+            app:destination="@id/ForgotFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:label="SignUp Fragment"
+        tools:layout="@layout/fragment_sign_up"
+        android:name="com.tele.crm.presentation.auth.signup.SignUpFragment">
+        <action
+            android:id="@+id/action_signUpFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/nav_slide_in_right"
+            app:exitAnim="@anim/nav_slide_out_left"
+            app:popExitAnim="@anim/nav_slide_out_right"
+            app:popEnterAnim="@anim/nav_slide_in_left"/>
+    </fragment>
+    <fragment
+        android:id="@+id/ForgotFragment"
+        android:label="Forgot Password Fragment"
+        tools:layout="@layout/fragment_forgot"
+        app:enterAnim="@anim/nav_slide_in_right"
+        app:exitAnim="@anim/nav_slide_out_left"
+        app:popExitAnim="@anim/nav_slide_out_right"
+        app:popEnterAnim="@anim/nav_slide_in_left"
+        android:name="com.tele.crm.presentation.auth.forgot.ForgotFragment"/>
+
+    <fragment
+        android:id="@+id/leadFragment"
+        android:label="Lead Fragment"
+        tools:layout="@layout/fragment_lead"
+
+        android:name="com.tele.crm.presentation.lead.LeadFragment">
+   <!--     <action
+            android:id="@+id/action_leadFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
+        <action
+            android:id="@+id/action_leadFragment_to_callFragment"
+            app:destination="@id/callFragment" />-->
+        <action
+            android:id="@+id/action_leadFragment_to_leadDetailsFragment"
+            app:destination="@id/leadDetailsFragment" />
+        <action
+            android:id="@+id/action_leadFragment_to_addLeadsFragment"
+            app:destination="@id/addLeadsFragment" />
+        <action
+            android:id="@+id/action_leadFragment_to_CallDetailsFragment"
+            app:destination="@id/CallDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingFragment"
+        android:label="Setting Fragment"
+        tools:layout="@layout/fragment_setting"
+
+        android:name="com.tele.crm.presentation.setting.SettingFragment">
+        <action
+            android:id="@+id/action_settingFragment_to_addLeadsFragment"
+            app:destination="@id/addLeadsFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_campaignFragment"
+            app:destination="@id/campaignFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/callFragment"
+        android:label="Call Fragment"
+        tools:layout="@layout/fragment_call"
+
+        android:name="com.tele.crm.presentation.call.CallFragment">
+        <action
+            android:id="@+id/action_callFragment_to_CallDetailsFragment"
+            app:destination="@id/CallDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addLeadsFragment"
+        android:label="AddLead Fragment"
+        tools:layout="@layout/fragment_add_leads"
+        app:enterAnim="@anim/nav_slide_in_right"
+        app:exitAnim="@anim/nav_slide_out_left"
+        app:popExitAnim="@anim/nav_slide_out_right"
+        app:popEnterAnim="@anim/nav_slide_in_left"
+        android:name="com.tele.crm.presentation.addleads.AddLeadsFragment"/>
+    <fragment
+        android:id="@+id/campaignFragment"
+        android:label="Campaign Fragment"
+        tools:layout="@layout/fragment_campaign"
+        app:enterAnim="@anim/nav_slide_in_right"
+        app:exitAnim="@anim/nav_slide_out_left"
+        app:popExitAnim="@anim/nav_slide_out_right"
+        app:popEnterAnim="@anim/nav_slide_in_left"
+        android:name="com.tele.crm.presentation.campaign.CampaignFragment">
+        <action
+            android:id="@+id/action_campaignFragment_to_campaignDetailsFragment"
+            app:destination="@id/campaignDetailsFragment" />
+        <action
+            android:id="@+id/action_campaignFragment_to_AddCampaignFragment"
+            app:destination="@id/AddCampaignFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/campaignDetailsFragment"
+        android:label="Campaign Details Fragment"
+        tools:layout="@layout/fragment_campaign_details"
+        app:enterAnim="@anim/nav_slide_in_right"
+        app:exitAnim="@anim/nav_slide_out_left"
+        app:popExitAnim="@anim/nav_slide_out_right"
+        app:popEnterAnim="@anim/nav_slide_in_left"
+        android:name="com.tele.crm.presentation.campaign.CampaignDetailsFragment"/>
+
+    <fragment
+        android:id="@+id/leadDetailsFragment"
+        android:label="Details Fragment"
+        tools:layout="@layout/fragment_lead_details"
+        app:enterAnim="@anim/nav_slide_in_right"
+        app:exitAnim="@anim/nav_slide_out_left"
+        app:popExitAnim="@anim/nav_slide_out_right"
+        app:popEnterAnim="@anim/nav_slide_in_left"
+        android:name="com.tele.crm.presentation.leadDetails.LeadDetailsFragment"/>
+
+    <fragment
+        android:id="@+id/AddCampaignFragment"
+        android:label="AddCampaignFragment"
+        tools:layout="@layout/fragment_add_campaign"
+        app:enterAnim="@anim/nav_slide_in_right"
+        app:exitAnim="@anim/nav_slide_out_left"
+        app:popExitAnim="@anim/nav_slide_out_right"
+        app:popEnterAnim="@anim/nav_slide_in_left"
+        android:name="com.tele.crm.presentation.campaign.AddCampaignFragment">
+        <action
+            android:id="@+id/action_AddCampaignFragment_to_campaignFragment"
+            app:destination="@id/campaignFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/CallDetailsFragment"
+        android:label="Call Details Fragment"
+        tools:layout="@layout/fragment_call_details"
+        app:enterAnim="@anim/nav_slide_in_right"
+        app:exitAnim="@anim/nav_slide_out_left"
+        app:popExitAnim="@anim/nav_slide_out_right"
+        app:popEnterAnim="@anim/nav_slide_in_left"
+        android:name="com.tele.crm.presentation.callDetails.CallDetailsFragment">
+
+        <action
+            android:id="@+id/action_CallDetailsFragment_to_callFragment"
+            app:destination="@id/callFragment" />
+    </fragment>
+
+</navigation>

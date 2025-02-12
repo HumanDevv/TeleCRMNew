@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/leadFragment"
+        android:icon="@drawable/user"
+        android:title="Leads"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/callFragment"
+        android:icon="@drawable/telephone"
+        android:title="Call"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/settingFragment"
+        android:icon="@drawable/setting"
+        android:title="Profile"
+        app:showAsAction="ifRoom" />
+</menu>

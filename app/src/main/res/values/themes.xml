@@ -1,0 +1,53 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.TeleCRM" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/black</item>
+    </style>
+
+    <style name="Theme.TeleCRM" parent="Base.Theme.TeleCRM" />
+    <style name="ThemeOverlay.AppTheme.BottomNavigationView" parent="@style/ThemeOverlay.MaterialComponents">
+        <item name="colorSurface">@null</item>
+    </style>
+
+
+    <style name="DialogAnimationTheme">
+        <item name="android:windowEnterAnimation">@anim/nav_slide_in_left</item>
+        <item name="android:windowExitAnimation">@anim/nav_slide_out_right</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+    <style name="CustomRatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_ratingbar</item>
+        <item name="android:minHeight">16dp</item> <!-- Adjust size -->
+        <item name="android:maxHeight">16dp</item> <!-- Adjust size -->
+    </style>
+
+    <style name="BottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+    </style>
+
+    <style name="BottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <!-- Transparent background -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+
+        <!-- Remove margins to ensure proper centering -->
+        <item name="android:windowMinWidthMajor">75%</item>
+        <item name="android:windowMinWidthMinor">75%</item>
+
+        <!-- Dialog text colors -->
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/gray</item>
+    </style>
+    <style name="BottomNavigationStyle">
+        <item name="android:gravity">center</item>
+        <item name="android:lines">1</item>
+        <item name="android:activatedBackgroundIndicator">@drawable/drawer_list_selector</item>
+
+    </style>
+</resources>
