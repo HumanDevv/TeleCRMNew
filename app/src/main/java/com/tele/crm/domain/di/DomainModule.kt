@@ -15,6 +15,8 @@ import com.tele.crm.domain.usecases.createCampaign.CreateCampaignUseCase
 import com.tele.crm.domain.usecases.createCampaign.CreateCampaignUseCaseImpl
 import com.tele.crm.domain.usecases.getCampaign.GetCampaignUseCase
 import com.tele.crm.domain.usecases.getCampaign.GetCampaignUseCaseImpl
+import com.tele.crm.domain.usecases.getCampaignDetails.GetCampaignDetailsUseCase
+import com.tele.crm.domain.usecases.getCampaignDetails.GetCampaignDetailsUseCaseImpl
 import com.tele.crm.domain.usecases.getInterest.GetInterestUseCase
 import com.tele.crm.domain.usecases.getInterest.GetInterestUseCaseImpl
 import com.tele.crm.domain.usecases.getLeads.GetLeadUseCase
@@ -100,6 +102,11 @@ object DomainModule {
   @Provides
     fun provideProfileUseCase(webRepository: CRMRepository,appDataStore: AppDataStore): GetProfileUseCase =
         GetProfileUseCaseImpl(webRepository,appDataStore)
+
+
+  @Provides
+    fun provideCampaignDetailsUseCase(webRepository: CRMRepository): GetCampaignDetailsUseCase =
+        GetCampaignDetailsUseCaseImpl(webRepository)
 
 
 }

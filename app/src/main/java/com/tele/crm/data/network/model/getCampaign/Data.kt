@@ -6,7 +6,7 @@ data class Data(
     val createdAt: String,
     val createdBy: String,
     val createdById: String,
-    val leads: List<String>,
+    val leads: List<Lead>,
     val name: String,
     val description: String,
     val updatedAt: String

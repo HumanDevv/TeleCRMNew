@@ -77,10 +77,10 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/_5sdp"
-            android:layout_weight="0.4"
+            android:layout_weight="0.3"
             android:fontFamily="@font/roboto_regular"
             android:text="Name"
-            android:textSize="@dimen/_16ssp" />
+            android:textSize="@dimen/_14ssp" />
 
         <EditText
             android:id="@+id/et_campagin_name"
@@ -92,7 +92,7 @@
             android:textColor="@color/blue"
             android:fontFamily="@font/roboto_regular"
             android:textSize="@dimen/_16ssp"
-            android:layout_weight="0.6"/>
+            android:layout_weight="0.7"/>
     </LinearLayout>
             <View
                 android:layout_width="match_parent"
@@ -113,10 +113,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/_5sdp"
-                    android:layout_weight="0.4"
+                    android:layout_weight="0.3"
                     android:fontFamily="@font/roboto_regular"
                     android:text="Description"
-                    android:textSize="@dimen/_16ssp" />
+                    android:textSize="@dimen/_14ssp" />
 
                 <EditText
                     android:id="@+id/et_campaign_description"
@@ -129,7 +129,7 @@
                     android:textColor="@color/blue"
                     android:fontFamily="@font/roboto_regular"
                     android:textSize="@dimen/_16ssp"
-                    android:layout_weight="0.6"/>
+                    android:layout_weight="0.7"/>
             </LinearLayout>
 
         </LinearLayout>

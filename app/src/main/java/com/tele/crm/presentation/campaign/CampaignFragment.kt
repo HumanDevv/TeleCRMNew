@@ -39,7 +39,8 @@ class CampaignFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         campaignAdapter = CampaignAdapter {
             val bundle = Bundle()
-            bundle.putString("type","edit")
+            bundle.putString("type","detail")
+            bundle.putString("id",it._id)
            findNavController().navigate(R.id.action_campaignFragment_to_AddCampaignFragment,bundle)
         }
         binding.rvCampaign.adapter = campaignAdapter

@@ -76,6 +76,6 @@ interface ApiService {
     @GET("activity/user/call-logs/{id}")
     suspend fun getCallLogs(@Path("id") callLogId: String): NetworkResponse<CallLogsResponse>
 
-    @GET("campaign/user/get-details/{id}")
-    suspend fun getCampaignDetails(@Path("id") campaignId: String): NetworkResponse<CampaignDetailsResponse>
+    @GET("campaign/user/get-details/{campaignId}")
+    suspend fun getCampaignDetails(@Path("campaignId") campaignId: String): NetworkResponse<CampaignDetailsResponse>
 }

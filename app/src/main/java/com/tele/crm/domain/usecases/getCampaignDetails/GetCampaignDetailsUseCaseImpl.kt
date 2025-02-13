@@ -8,8 +8,8 @@ import com.tele.crm.domain.usecases.callLogs.GetCallLogUsecase
 class GetCampaignDetailsUseCaseImpl(
     val webRepository: CRMRepository,
 ) : GetCampaignDetailsUseCase {
-    override suspend fun execute(leadId: GetCampaignDetailsUseCase.Input): Result<CampaignDetailsResponse> {
-        val result= webRepository.getCampaignDetails("id")
+    override suspend fun execute(campaignId: GetCampaignDetailsUseCase.Input): Result<CampaignDetailsResponse> {
+        val result= webRepository.getCampaignDetails(campaignId.request)
         return result
     }
 
