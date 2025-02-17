@@ -8,7 +8,7 @@
     tools:context=".presentation.campaign.CampaignFragment">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_40sdp"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@color/white"
         android:id="@+id/layout_header">
@@ -40,7 +40,7 @@
             android:layout_height="@dimen/_30sdp"
             android:src="@drawable/add"
             android:id="@+id/add"
-            app:tint="@color/blue"
+            app:tint="@color/bluenew"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="@dimen/_5sdp"
             app:layout_constraintEnd_toEndOf="parent"

@@ -1,7 +1,8 @@
 package com.tele.crm.data.network.repository
 
-import com.tele.crm.data.network.ApiResponse
 import com.tele.crm.data.network.ApiService
+import com.tele.crm.data.network.model.activityAdd.ActivityAddResponse
+import com.tele.crm.data.network.model.activityAdd.activtiyAddRequest
 import com.tele.crm.data.network.model.addLead.AddLeadRequest
 import com.tele.crm.data.network.model.addLead.AddLeadResponse
 import com.tele.crm.data.network.model.addLeadToCampaign.AddLeadToCampaignResponse
@@ -20,13 +21,12 @@ import com.tele.crm.data.network.model.getYear.GetYearResponse
 import com.tele.crm.data.network.model.logout.LogoutResponse
 import com.tele.crm.data.network.model.profile.ProfileResponse
 import com.tele.crm.data.network.model.recentCalls.CallResponse
+import com.tele.crm.data.network.model.updateCampaign.UpdateCampaignResponse
+import com.tele.crm.data.network.model.updateRemark.UpdateRemarkRequest
+import com.tele.crm.data.network.model.updateRemark.UpdateRemarkResponse
 import com.tele.crm.data.network.model.updateStatus.UpdateStatusRequest
 import com.tele.crm.data.network.model.updateStatus.UpdateStatusResopnse
-import com.tele.crm.data.network.response.NetworkResponse
 import com.tele.crm.data.network.response.toResult
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import retrofit2.Response
 import javax.inject.Inject
 
 class CRMRepositoryImpl @Inject constructor(  private val apiService: ApiService
@@ -40,8 +40,23 @@ class CRMRepositoryImpl @Inject constructor(  private val apiService: ApiService
         return apiService.addLead(request).toResult()
     }
 
+    override suspend fun updateLead(
+        leadId: String,
+        request: AddLeadRequest
+    ): Result<AddLeadResponse> {
+        return apiService.updateLead(leadId,request).toResult()
+    }
+
     override suspend fun addLeadToCampaign(request: AddToCampaignRequest): Result<AddLeadToCampaignResponse> {
         return apiService.addLeadToCampaign(request).toResult()
+    }
+
+    override suspend fun removeLeadToCampaign(request: AddToCampaignRequest): Result<AddLeadToCampaignResponse> {
+        return apiService.removeLeadToCampaign(request).toResult()
+    }
+
+    override suspend fun addActivity(request: activtiyAddRequest): Result<ActivityAddResponse> {
+        return apiService.activityAdd(request).toResult()
     }
 
     override suspend fun updateLeadStatus(request: UpdateStatusRequest): Result<UpdateStatusResopnse> {
@@ -88,8 +103,17 @@ class CRMRepositoryImpl @Inject constructor(  private val apiService: ApiService
         return apiService.createCampaign(request).toResult()
     }
 
+    override suspend fun updateRemark(request: UpdateRemarkRequest): Result<UpdateRemarkResponse> {
+        return apiService.updateRemarks(request).toResult()
+    }
+
     override suspend fun getCampaignDetails(campaignId: String): Result<CampaignDetailsResponse> {
         return apiService.getCampaignDetails(campaignId).toResult()
+    }
+
+
+    override suspend fun updateCampaign(campaignId: String,request: CampaignRequest): Result<UpdateCampaignResponse> {
+        return apiService.updateCampaign(campaignId,request).toResult()
     }
 
 

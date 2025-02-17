@@ -1,9 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tvMetaTitle"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
-    android:textSize="14sp"
+    android:orientation="vertical"
     android:background="?attr/selectableItemBackground"
-    android:clickable="true" />
+    android:clickable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp"
+
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvMetaTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_regular"
+            android:padding="8dp" />
+
+        <ImageView
+            android:id="@+id/ivSelectIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/check"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- Divider Line -->
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+ />
+
+</LinearLayout>

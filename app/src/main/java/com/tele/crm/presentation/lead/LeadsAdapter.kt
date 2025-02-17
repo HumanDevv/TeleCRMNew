@@ -21,7 +21,8 @@ class LeadsAdapter(private val listener: (Data) -> Unit) : RecyclerView.Adapter<
 
         leadList.clear()
         leadList.addAll(newList)
-        diffResult.dispatchUpdatesTo(this)
+        notifyDataSetChanged()  // Force refresh
+
     }
 
 

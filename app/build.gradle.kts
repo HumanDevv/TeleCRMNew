@@ -1,9 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
     alias(libs.plugins.serialization)
     alias(libs.plugins.hiltDagger)
+    alias(libs.plugins.ksp)
+    id("kotlin-parcelize")
+
 }
 
 android {
@@ -60,7 +62,7 @@ dependencies {
     implementation(libs.navigation.ui)
     //hilt
     implementation(libs.dagger.hilt)
-    kapt(libs.dagger.hilt.compiler)
+    ksp(libs.dagger.hilt.compiler)
 
     //retrofit
     implementation(libs.retrofit.retrofit)
@@ -71,9 +73,6 @@ dependencies {
     //To change dimensions according to screen size
     implementation(libs.sdp.sdp)
     implementation(libs.ssp.ssp)
-
-    kapt(libs.dagger.hilt.compiler)
-    implementation(libs.dagger.hilt)
 
     //coroutines
     implementation(libs.coroutines)

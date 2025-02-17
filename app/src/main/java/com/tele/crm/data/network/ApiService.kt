@@ -1,5 +1,7 @@
 package com.tele.crm.data.network
 
+import com.tele.crm.data.network.model.activityAdd.ActivityAddResponse
+import com.tele.crm.data.network.model.activityAdd.activtiyAddRequest
 import com.tele.crm.data.network.model.addLead.AddLeadRequest
 import com.tele.crm.data.network.model.addLead.AddLeadResponse
 import com.tele.crm.data.network.model.addLeadToCampaign.AddLeadToCampaignResponse
@@ -18,6 +20,9 @@ import com.tele.crm.data.network.model.getYear.GetYearResponse
 import com.tele.crm.data.network.model.logout.LogoutResponse
 import com.tele.crm.data.network.model.profile.ProfileResponse
 import com.tele.crm.data.network.model.recentCalls.CallResponse
+import com.tele.crm.data.network.model.updateCampaign.UpdateCampaignResponse
+import com.tele.crm.data.network.model.updateRemark.UpdateRemarkRequest
+import com.tele.crm.data.network.model.updateRemark.UpdateRemarkResponse
 import com.tele.crm.data.network.model.updateStatus.UpdateStatusRequest
 import com.tele.crm.data.network.model.updateStatus.UpdateStatusResopnse
 import com.tele.crm.data.network.response.NetworkResponse
@@ -37,12 +42,22 @@ interface ApiService {
     suspend fun addLead(@Body addLeadRequest: AddLeadRequest): NetworkResponse<AddLeadResponse>
 
 
+    @PATCH("lead/user/update/{leadId}")
+    suspend fun updateLead(@Path("leadId") campaignId: String,@Body addLeadRequest: AddLeadRequest): NetworkResponse<AddLeadResponse>
+
+
     @POST("campaign/user/add")
     suspend fun createCampaign(@Body campaignRequest: CampaignRequest): NetworkResponse<CampaignResponse>
 
 
     @POST("campaign/user/add-lead")
     suspend fun addLeadToCampaign(@Body addToCampaignRequest: AddToCampaignRequest): NetworkResponse<AddLeadToCampaignResponse>
+
+    @PATCH("campaign/user/remove-lead")
+    suspend fun removeLeadToCampaign(@Body addToCampaignRequest: AddToCampaignRequest): NetworkResponse<AddLeadToCampaignResponse>
+
+    @POST("activity/user/add")
+    suspend fun activityAdd(@Body activityAddRequest: activtiyAddRequest): NetworkResponse<ActivityAddResponse>
 
 
 
@@ -78,4 +93,13 @@ interface ApiService {
 
     @GET("campaign/user/get-details/{campaignId}")
     suspend fun getCampaignDetails(@Path("campaignId") campaignId: String): NetworkResponse<CampaignDetailsResponse>
+
+
+    @PATCH("campaign/user/update/{campaignId}")
+    suspend fun updateCampaign(@Path("campaignId") campaignId: String,@Body CampaignRequest: CampaignRequest): NetworkResponse<UpdateCampaignResponse>
+
+    @PATCH("activity/user/update-remarks")
+    suspend fun updateRemarks(@Body updateRemarkRequest: UpdateRemarkRequest): NetworkResponse<UpdateRemarkResponse>
+
+
 }

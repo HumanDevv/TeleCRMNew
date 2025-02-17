@@ -1,6 +1,7 @@
 package com.tele.crm.data.network.model.campaign
 
-import com.tele.crm.data.network.model.callLogs.Lead
+import Lead
+
 
 data class Campaign(
     val __v: Int,

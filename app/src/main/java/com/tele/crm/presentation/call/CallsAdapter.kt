@@ -6,8 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tele.crm.data.network.model.recentCalls.Data
 import com.tele.crm.databinding.RowCallsBinding
 import com.tele.crm.utils.extension.getTimeAgo
+import com.tele.crm.utils.extension.setDebouncedOnClickListener
 
-class CallsAdapter : RecyclerView.Adapter<CallsAdapter.CallViewHolder>() {
+class CallsAdapter(private val listener: (Data) -> Unit) : RecyclerView.Adapter<CallsAdapter.CallViewHolder>() {
 
     private val callList = mutableListOf<Data?>()
 
@@ -19,7 +20,9 @@ class CallsAdapter : RecyclerView.Adapter<CallsAdapter.CallViewHolder>() {
     }
 
     // ViewHolder should bind individual CallResponseItem, not a list
-    class CallViewHolder(private val binding: RowCallsBinding) : RecyclerView.ViewHolder(binding.root) {
+    class CallViewHolder(private val binding: RowCallsBinding,
+                         private val listener: (Data) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(call: Data?) {
             // Safely check for null
             call?.let {
@@ -29,14 +32,16 @@ class CallsAdapter : RecyclerView.Adapter<CallsAdapter.CallViewHolder>() {
                 binding.tvDuration.text = it.lastCall?.remarks ?: "Unknown Remark"
                 binding.tvTimestatus.text = it.lastCall?.duration ?: "Unknown duration"
                 binding.tvTime.text = getTimeAgo(it.lastCall.timestamp)
-
+                itemView.setDebouncedOnClickListener {
+                    listener(call)
+                }
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CallViewHolder {
         val binding = RowCallsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CallViewHolder(binding)
+        return CallViewHolder(binding,listener)
     }
 
     override fun onBindViewHolder(holder: CallViewHolder, position: Int) {

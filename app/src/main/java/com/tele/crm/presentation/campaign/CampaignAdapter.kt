@@ -1,6 +1,7 @@
 package com.tele.crm.presentation.campaign
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tele.crm.data.network.model.campaign.CampaignRequest
@@ -25,9 +26,13 @@ class CampaignAdapter(private val listener: (Data) -> Unit) : RecyclerView.Adapt
         fun bind(campaign: Data) {
             binding.tvName.text = campaign.name
             binding.tvCount.text =campaign.leads.size.toString()
-            binding.tvDescription.text =campaign.description
-
-            itemView.setDebouncedOnClickListener {
+            if (!campaign.description.isNullOrEmpty()) {
+                binding.tvDescription.text = campaign.description
+                binding.layoutDescription.visibility = View.VISIBLE
+            } else {
+                binding.layoutDescription.visibility = View.GONE  // Hide layout if description is missing or empty
+}
+                itemView.setDebouncedOnClickListener {
                 listener.invoke(campaign)
             }
         }

@@ -101,7 +101,8 @@
             app:destination="@id/addLeadsFragment" />
         <action
             android:id="@+id/action_leadFragment_to_CallDetailsFragment"
-            app:destination="@id/CallDetailsFragment" />
+            app:destination="@id/CallDetailsFragment"
+            app:launchSingleTop="true"/>
     </fragment>
 
     <fragment
@@ -191,6 +192,9 @@
         <action
             android:id="@+id/action_AddCampaignFragment_to_campaignFragment"
             app:destination="@id/campaignFragment" />
+        <action
+            android:id="@+id/action_AddCampaignFragment_to_CallDetailsFragment"
+            app:destination="@id/CallDetailsFragment" />
     </fragment>
 
     <fragment
@@ -201,11 +205,16 @@
         app:exitAnim="@anim/nav_slide_out_left"
         app:popExitAnim="@anim/nav_slide_out_right"
         app:popEnterAnim="@anim/nav_slide_in_left"
+
         android:name="com.tele.crm.presentation.callDetails.CallDetailsFragment">
 
         <action
             android:id="@+id/action_CallDetailsFragment_to_callFragment"
             app:destination="@id/callFragment" />
+        <action
+            android:id="@+id/action_CallDetailsFragment_to_addLeadsFragment"
+            app:destination="@id/addLeadsFragment"
+            />
     </fragment>
 
 </navigation>

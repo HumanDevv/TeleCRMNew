@@ -2,17 +2,31 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/gray"
+
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<com.google.android.material.card.MaterialCardView
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/gray"
+        app:cardCornerRadius="@dimen/_5sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginHorizontal="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:padding="@dimen/_5sdp"
+        app:strokeWidth="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <com.google.android.material.card.MaterialCardView
     android:id="@+id/layout_campaign"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="@dimen/_5sdp"
     app:layout_constraintTop_toTopOf="parent"
-    android:layout_marginHorizontal="@dimen/_5sdp"
-    android:layout_marginTop="@dimen/_5sdp"
     android:padding="@dimen/_5sdp"
     app:strokeWidth="0dp">
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -79,10 +93,7 @@
         android:id="@+id/layout_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_5sdp"
         app:cardBackgroundColor="@color/gray"
-        android:layout_marginTop="-5dp"
-        app:cardCornerRadius="@dimen/_5sdp"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/layout_campaign"
         app:strokeWidth="0dp"
@@ -93,13 +104,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_regular"
-
             android:padding="@dimen/_5sdp"
             android:text="Campaign Name"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
     </com.google.android.material.card.MaterialCardView>
-
-
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

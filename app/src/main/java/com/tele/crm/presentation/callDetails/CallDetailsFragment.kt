@@ -1,7 +1,6 @@
 package com.tele.crm.presentation.callDetails
 
-import android.content.Intent
-import android.net.Uri
+import Lead
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,15 +9,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.tele.crm.R
 import com.tele.crm.data.network.ApiCallingState
+import com.tele.crm.data.network.model.activityAdd.activtiyAddRequest
 import com.tele.crm.data.network.model.addLeadToCampaign.AddToCampaignRequest
+import com.tele.crm.data.network.model.callLogs.CallLog
+import com.tele.crm.data.network.model.updateRemark.UpdateRemarkRequest
+
 import com.tele.crm.data.network.model.updateStatus.UpdateStatusRequest
 import com.tele.crm.databinding.FragmentCallDetailsBinding
 import com.tele.crm.domain.entites.MetaItem
 import com.tele.crm.presentation.call.CallViewModel
 import com.tele.crm.presentation.campaign.CampaignViewModel
+import com.tele.crm.utils.CampaignBottomSheet
 import com.tele.crm.utils.MetaItemBottomSheet
 import com.tele.crm.utils.extension.fragmentScope
 import com.tele.crm.utils.extension.getCallLogsForNumber
@@ -29,6 +35,7 @@ import com.tele.crm.utils.extension.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class CallDetailsFragment : Fragment() {
@@ -36,8 +43,9 @@ class CallDetailsFragment : Fragment() {
     private val viewModel: CallViewModel by viewModels()
     private val campaignViewModel: CampaignViewModel by viewModels()
     var leadId=""
-    private val callsAdapter = CallsHistoryAdapter()
+    lateinit var callsAdapter :CallsHistoryAdapter
     private var getCampaign: MutableList<MetaItem> = mutableListOf()
+    var campaignIdList: MutableList<String> = mutableListOf()
     val statusList = listOf(
         "Fresh",
         "RNR",
@@ -49,6 +57,7 @@ class CallDetailsFragment : Fragment() {
         "Won",
         "Lost",
     )
+    lateinit var lead:Lead
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,13 +73,19 @@ class CallDetailsFragment : Fragment() {
 
         }
         observeAddLeadToCampaignApi()
+        observeAddActivityApi()
         observeUpdateLeadStatusApi()
+
+        callsAdapter = CallsHistoryAdapter { remark, callId,outcome ->
+            sendRemarkToServer(remark, callId,outcome )
+        }
         binding.rvCallHistory.adapter = callsAdapter
         binding.rvCallHistory.layoutManager = LinearLayoutManager(context)
         observerCallLogsResponse()
         viewModel.getCallLogs(leadId)
         campaignViewModel.getCampaigns()
         observerGetCampaignResponse()
+        observeUpdateRemarkApi()
         handleClicks()
 
     }
@@ -80,13 +95,30 @@ class CallDetailsFragment : Fragment() {
             ivBack.setDebouncedOnClickListener {
                 findNavController().popBackStack()
             }
-            tvCampaign.setOnClickListener {
+            edit.setOnClickListener {
                 showMetaItemBottomSheet(getCampaign) { selectedItem ->
-                    binding.tvCampaign.text = selectedItem.title
-                    viewModel.addLeadToCampaignApi(AddToCampaignRequest(selectedItem.id,
-                        listOf(leadId)
-                    ))
+                    if (campaignIdList.contains(selectedItem.id)) {
+                        // If the item is already selected, remove the lead from the campaign
+                       /* viewModel.removeLeadToCampaignApi(AddToCampaignRequest(selectedItem.id, listOf(leadId)))
+                        campaignIdList.remove(selectedItem.id)*/
+                    } else {
+                        // If the item is not selected, add the lead to the campaign
+                        viewModel.addLeadToCampaignApi(AddToCampaignRequest(selectedItem.id, listOf(leadId)))
+                        campaignIdList.add(selectedItem.id)
+                    }
+
+                    // Update UI
+                    binding.tvCampaign.text = selectedItem.name
                 }
+            }
+
+
+            ivCall.setOnClickListener {
+                val randomDuration = Random.nextInt(0, 121).toString()
+
+                viewModel.addActivity(
+                    activtiyAddRequest(leadId,randomDuration,"","connected","outgoing")
+                )
             }
             tvStatus.setOnClickListener {
                 showStatusItemBottomSheet(statusList) { selectedItem ->
@@ -96,18 +128,29 @@ class CallDetailsFragment : Fragment() {
                 }
             }
 
-            ivCall.setOnClickListener {
+       /*     ivCall.setOnClickListener {
                 val phoneNumber = binding.tvMobile.text.toString()
                 val dialIntent = Intent(Intent.ACTION_DIAL).apply {
                     data = Uri.parse("tel:$phoneNumber")
                 }
                 startActivity(dialIntent)
+            }*/
+            showLeadInfo.setOnClickListener {
+                val bundle = Bundle().apply {
+                    putParcelable("lead_data", lead)
+                    putString("type","detail")
+                }
+                findNavController().navigate(R.id.action_CallDetailsFragment_to_addLeadsFragment,bundle, NavOptions.Builder()
+                    .setPopUpTo(R.id.CallDetailsFragment, false)
+                    .build())
             }
 
         }
     }
 
-
+    private fun sendRemarkToServer(remark: String, callId: String,outcome:String) {
+        viewModel.updateRemark(UpdateRemarkRequest(leadId,callId,remark,outcome)) // Call API to send remark
+    }
     private fun observerCallLogsResponse() {
         viewModel.callLogs.onEach {
             when (it) {
@@ -123,12 +166,13 @@ class CallDetailsFragment : Fragment() {
                         binding.tvName.text=it.value.data.lead.name
                         binding.tvMobile.text=it.value.data.lead.mobile
                         binding.tvStatus.text=it.value.data.lead.status
-                        //binding.tvCampaign.text=it.value.lead.status
                         binding.initialsTextView.text=getInitials(it.value.data.lead.name)
-                        val callLogs = getCallLogsForNumber(requireActivity(), it.value.data.lead.mobile)
-
-                        Log.d("ASDfasdfsa",callLogs.toString())
-                        callsAdapter.submitList(callLogs)
+                        lead= it.value.data.lead
+                        it.value?.data?.lead?.campaigns?.let { campaigns ->
+                            campaignIdList.clear()
+                            campaignIdList.addAll(campaigns.map { campaign -> campaign.id })
+                        }
+                        callsAdapter.submitList(it.value.data.callLogs)
 
                     } else {
                         showToast("Empty List")
@@ -155,7 +199,7 @@ class CallDetailsFragment : Fragment() {
     }
 
     private fun showMetaItemBottomSheet(metaItems: List<MetaItem>, onItemSelected: (MetaItem) -> Unit) {
-        val bottomSheet = MetaItemBottomSheet(requireContext(), metaItems, onItemSelected)
+        val bottomSheet = CampaignBottomSheet(requireContext(), metaItems,campaignIdList, onItemSelected)
         bottomSheet.show(parentFragmentManager, bottomSheet.tag)
     }
     private fun showStatusItemBottomSheet(metaItems: List<String>, onItemSelected: (String) -> Unit) {
@@ -171,10 +215,36 @@ class CallDetailsFragment : Fragment() {
                 is ApiCallingState.Success -> {
                     hideProgress()
                     if (it.value.success) {
-                        showToast(it.value.message)
-                        findNavController().popBackStack()
+                        requireContext().showToast(it.value.message)
+                        //findNavController().popBackStack()
+                        //viewModel.getCallLogs(leadId)
                     } else {
-                        showToast(it.value.message)
+                        requireContext().showToast(it.value.message)
+                    }
+                }
+
+                is ApiCallingState.Failure -> {
+                    hideProgress()
+
+
+                }
+
+                else -> Unit
+            }
+        }.launchIn(fragmentScope)
+    }
+    private fun observeAddActivityApi() {
+        viewModel.addActivity.onEach {
+            when (it) {
+                is ApiCallingState.Loading -> showProgress()
+                is ApiCallingState.Success -> {
+                    hideProgress()
+                    if (it.value.success) {
+                        requireContext().showToast(it.value.message)
+                        //findNavController().popBackStack()
+                        viewModel.getCallLogs(leadId)
+                    } else {
+                        requireContext().showToast(it.value.message)
                     }
                 }
 
@@ -195,10 +265,12 @@ class CallDetailsFragment : Fragment() {
                 is ApiCallingState.Success -> {
                     hideProgress()
                     if (it.value.success) {
-                        showToast(it.value.message)
-                        findNavController().popBackStack()
+                        requireContext().showToast(it.value.message)
+                       // Log.d("SDfgfdsg",it.value.lead.status )
+                        //binding.tvStatus.text = it.value.lead.status ?: binding.tvStatus.text
+                        //findNavController().popBackStack()
                     } else {
-                        showToast(it.value.message)
+                        requireContext().showToast(it.value.message)
                     }
                 }
 
@@ -226,7 +298,7 @@ class CallDetailsFragment : Fragment() {
                         val tempList = it.value.data.map { item ->
                             MetaItem(
                                 id = item._id.orEmpty(),
-                                title = item.name
+                                name = item.name
                             )
                         }
                         getCampaign.addAll(tempList)
@@ -244,6 +316,29 @@ class CallDetailsFragment : Fragment() {
                 else -> Unit
             }
         }.launchIn(lifecycleScope)
+    }
+    private fun observeUpdateRemarkApi() {
+        viewModel.updateRemark.onEach {
+            when (it) {
+                is ApiCallingState.Loading -> showProgress()
+                is ApiCallingState.Success -> {
+                    hideProgress()
+                    if (it.value.success) {
+                        //requireContext().showToast(it.value.message)
+                        viewModel.getCallLogs(leadId)
+
+                    } else {
+                        requireContext().showToast(it.value.message)
+                    }
+                }
+
+                is ApiCallingState.Failure -> {
+                    hideProgress()
+                }
+
+                else -> Unit
+            }
+        }.launchIn(fragmentScope)
     }
 
 }

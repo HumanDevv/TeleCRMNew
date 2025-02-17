@@ -2,9 +2,12 @@ package com.tele.crm.domain.di
 
 import com.tele.crm.data.datastore.AppDataStore
 import com.tele.crm.data.network.model.campaign.CampaignRequest
+import com.tele.crm.data.network.model.updateRemark.UpdateRemarkRequest
 import com.tele.crm.domain.appevents.AppEventsHandler
 import com.tele.crm.domain.appevents.AppEventsHandlerImpl
 import com.tele.crm.data.network.repository.CRMRepository
+import com.tele.crm.domain.usecases.activityAdd.AddActivityUseCase
+import com.tele.crm.domain.usecases.activityAdd.AddActivityUseCaseImpl
 import com.tele.crm.domain.usecases.addLead.AddLeadUseCase
 import com.tele.crm.domain.usecases.addLead.AddLeadUseCaseImpl
 import com.tele.crm.domain.usecases.addLeadToCampaign.AddLeadToCampaignUseCase
@@ -34,8 +37,16 @@ import com.tele.crm.domain.usecases.logout.LogOutUseCase
 import com.tele.crm.domain.usecases.logout.LogOutUseCaseImpl
 import com.tele.crm.domain.usecases.recentCalls.RecentCallUseCase
 import com.tele.crm.domain.usecases.recentCalls.RecentCallUseCaseImpl
+import com.tele.crm.domain.usecases.removeLead.RemoveLeadUseCase
+import com.tele.crm.domain.usecases.removeLead.RemoveLeadUseCaseImpl
+import com.tele.crm.domain.usecases.updateCampaign.UpdateCampaignUseCase
+import com.tele.crm.domain.usecases.updateCampaign.UpdateCampaignUseCaseImpl
+import com.tele.crm.domain.usecases.updateLead.UpdateLeadUseCase
+import com.tele.crm.domain.usecases.updateLead.UpdateLeadUseCaseImpl
 import com.tele.crm.domain.usecases.updateLeadStatus.UpdateStatusUseCase
 import com.tele.crm.domain.usecases.updateLeadStatus.UpdateStatusUseCaseImpl
+import com.tele.crm.domain.usecases.updateRemark.UpdateRemarkUseCase
+import com.tele.crm.domain.usecases.updateRemark.UpdateRemarkUseCaseImpl
 
 import dagger.Module
 import dagger.Provides
@@ -56,8 +67,20 @@ object DomainModule {
         AddLeadUseCaseImpl(webRepository)
 
   @Provides
+    fun provideRemoveLeadUseCase(webRepository: CRMRepository): RemoveLeadUseCase =
+        RemoveLeadUseCaseImpl(webRepository)
+
+  @Provides
+    fun provideUpdateLeadUseCase(webRepository: CRMRepository): UpdateLeadUseCase =
+      UpdateLeadUseCaseImpl(webRepository)
+
+  @Provides
     fun provideAddLeadToCampaignUseCase(webRepository: CRMRepository): AddLeadToCampaignUseCase =
       AddLeadToCampaignUseCaseImpl(webRepository)
+
+  @Provides
+    fun provideAddActivityUseCase(webRepository: CRMRepository): AddActivityUseCase =
+      AddActivityUseCaseImpl(webRepository)
 
   @Provides
     fun provideUpdateLeadStatusUseCase(webRepository: CRMRepository): UpdateStatusUseCase =
@@ -107,6 +130,17 @@ object DomainModule {
   @Provides
     fun provideCampaignDetailsUseCase(webRepository: CRMRepository): GetCampaignDetailsUseCase =
         GetCampaignDetailsUseCaseImpl(webRepository)
+
+
+
+  @Provides
+    fun provideUpdateCampaignUseCase(webRepository: CRMRepository): UpdateCampaignUseCase =
+        UpdateCampaignUseCaseImpl(webRepository)
+
+
+  @Provides
+    fun provideUpdateRemarkUseCase(webRepository: CRMRepository): UpdateRemarkUseCase =
+      UpdateRemarkUseCaseImpl(webRepository)
 
 
 }

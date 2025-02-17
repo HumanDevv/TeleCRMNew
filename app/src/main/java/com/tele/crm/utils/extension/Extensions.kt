@@ -18,6 +18,7 @@ import android.text.Editable
 import android.text.TextUtils
 import android.util.Patterns
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import java.io.Serializable
@@ -29,6 +30,7 @@ import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -293,55 +295,45 @@ fun getTimeAgo(isoDate: String): String {
 
 
 }
+fun showDatePicker(context: Context, selectedDate: String?, onDateSelected: (String) -> Unit) {
+    val calendar = Calendar.getInstance()
+    val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()) // Ensure same format as selectedDate
 
-fun showDatePicker(context: Context, onDateSelected: (String) -> Unit) {
-    val calendar = Calendar.getInstance() // Get current date
+    selectedDate?.let {
+        try {
+            val date = sdf.parse(it)
+            if (date != null) {
+                calendar.time = date // Correctly update calendar
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
-    // Set default values to the current date
     val year = calendar.get(Calendar.YEAR)
     val month = calendar.get(Calendar.MONTH)
     val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-    // Date Picker Dialog
     val datePickerDialog = DatePickerDialog(
         context,
-        { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
-            // Format selected date as "YYYY-MM-DD"
+        { _, selectedYear, selectedMonth, selectedDay ->
             val selectedCalendar = Calendar.getInstance()
             selectedCalendar.set(selectedYear, selectedMonth, selectedDay)
 
             val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
             val formattedDate = dateFormat.format(selectedCalendar.time)
 
-            onDateSelected(formattedDate) // Return selected date
+            onDateSelected(formattedDate)
         },
-        year, month, day // Set current date as default
+        year, month, day
     )
 
-    // Disable past dates
+    // Ensure minDate works properly
     datePickerDialog.datePicker.minDate = calendar.timeInMillis
 
-    // Show the dialog
-    datePickerDialog.setOnDismissListener {
-        // The dialog will dismiss after selecting a date automatically
-    }
-
-    // Dismiss the dialog immediately after selecting a date (without needing to access datePickerDialog)
-    datePickerDialog.setOnDateSetListener { _, selectedYear, selectedMonth, selectedDay ->
-        // Format the date
-        val selectedCalendar = Calendar.getInstance()
-        selectedCalendar.set(selectedYear, selectedMonth, selectedDay)
-
-        val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-        val formattedDate = dateFormat.format(selectedCalendar.time)
-
-        // Callback with the formatted date
-        onDateSelected(formattedDate)
-    }
-
-    // Show the date picker dialog
     datePickerDialog.show()
 }
+
 fun getCurrentDate(): String {
     val calendar = Calendar.getInstance()
     val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
@@ -404,4 +396,18 @@ fun getCallLogsForNumber(context: Context, phoneNumber: String): List<CallLogIte
  */
 fun normalizePhoneNumber(phoneNumber: String): String {
     return phoneNumber.replace("^\\+?91".toRegex(), "").trim()
+}
+
+fun getFormattedTimestamp(timestamp: String): String {
+    return try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone("UTC") // Ensure it parses UTC time correctly
+        }
+        val outputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+
+        val date = inputFormat.parse(timestamp) // Convert string to Date
+        date?.let { outputFormat.format(it) } ?: "Invalid date"
+    } catch (e: Exception) {
+        "Invalid date"
+    }
 }

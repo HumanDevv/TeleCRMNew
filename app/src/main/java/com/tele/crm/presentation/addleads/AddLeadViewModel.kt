@@ -11,8 +11,8 @@ import com.tele.crm.domain.entites.MetaItem
 import com.tele.crm.domain.usecases.addLead.AddLeadUseCase
 import com.tele.crm.domain.usecases.getInterest.GetInterestUseCase
 import com.tele.crm.domain.usecases.getStream.GetStreamUseCase
-import com.tele.crm.domain.usecases.getProfile.GetProfileUseCase
 import com.tele.crm.domain.usecases.getYears.GetYearUseCase
+import com.tele.crm.domain.usecases.updateLead.UpdateLeadUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -26,6 +26,7 @@ class AddLeadViewModel @Inject constructor(
     private val getInterestUseCase: GetInterestUseCase,
     private val getStreamUseCase: GetStreamUseCase,
     private val getYearUseCase: GetYearUseCase,
+    private val updateLeadUseCase: UpdateLeadUseCase
 ) : ViewModel() {
     val name = MutableLiveData<String>()
     val mobile = MutableLiveData<String>()
@@ -58,6 +59,11 @@ class AddLeadViewModel @Inject constructor(
     )
     val addLeadFlow: SharedFlow<ApiCallingState<AddLeadResponse>> get() = _addLeadFlow.asSharedFlow()
 
+    private val _updateLeadFlow = MutableStateFlow<ApiCallingState<AddLeadResponse>>(
+        ApiCallingState.Idle
+    )
+    val updateLeadFlow: SharedFlow<ApiCallingState<AddLeadResponse>> get() = _updateLeadFlow.asSharedFlow()
+
     private val _interestListLiveData = MutableLiveData<List<MetaItem>>()
     val interestListLiveData: LiveData<List<MetaItem>> get() = _interestListLiveData
 
@@ -79,6 +85,18 @@ class AddLeadViewModel @Inject constructor(
             }
         }
     }
+    fun updateLeadApi(leadId:String,addLeadRequest: AddLeadRequest) {
+        viewModelScope.launch {
+            _updateLeadFlow.emit(ApiCallingState.Loading())
+            updateLeadUseCase.execute(
+                UpdateLeadUseCase.Input(leadId,addLeadRequest)
+            ).onSuccess {
+                _updateLeadFlow.emit(ApiCallingState.Success(it))
+            }.onFailure {
+                _updateLeadFlow.emit(ApiCallingState.Failure.Unknown(throwable = it))
+            }
+        }
+    }
 
     fun getInterest() {
         viewModelScope.launch {
@@ -92,7 +110,7 @@ class AddLeadViewModel @Inject constructor(
                         val tempList = response.data.map { item ->
                             MetaItem(
                                 id = item._id.orEmpty(),
-                                title = item.interest.orEmpty()
+                                name = item.interest.orEmpty()
                             )
                         }
                         interestList.addAll(tempList)
@@ -116,7 +134,7 @@ class AddLeadViewModel @Inject constructor(
                         val tempList = response.data.map { item ->
                             MetaItem(
                                 id = item._id.orEmpty(),
-                                title = item.stream_name.orEmpty()
+                                name = item.stream_name.orEmpty()
                             )
                         }
                         streamList.addAll(tempList)
@@ -140,7 +158,7 @@ class AddLeadViewModel @Inject constructor(
                         val tempList = response.data.map { item ->
                             MetaItem(
                                 id = item._id.orEmpty(),
-                                title = item.year.orEmpty()
+                                name = item.year.orEmpty()
                             )
                         }
                         yearList.addAll(tempList)

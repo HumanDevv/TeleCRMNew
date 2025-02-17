@@ -8,6 +8,6 @@ data class Data(
     val createdById: String,
     val leads: List<Lead>,
     val name: String,
-    val description: String,
+    val description: String?=null,
     val updatedAt: String
 )

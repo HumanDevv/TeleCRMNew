@@ -55,7 +55,9 @@ class LeadFragment : Fragment() {
         viewModel.getLeads()
         observerGetLeadResponse()
         binding.addLeadBtn.setDebouncedOnClickListener {
-            findNavController().navigate(R.id.action_leadFragment_to_addLeadsFragment)
+            val bundle=Bundle()
+            bundle.putString("type","add")
+            findNavController().navigate(R.id.action_leadFragment_to_addLeadsFragment,bundle)
         }
 
         profileViewModel.profileListLiveData.observe(viewLifecycleOwner, Observer { metaItems ->
@@ -64,11 +66,8 @@ class LeadFragment : Fragment() {
             }
         })
         leadsAdapter = LeadsAdapter { leadEntry ->
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(Manifest.permission.READ_CALL_LOG), CALL_LOG_PERMISSION_REQUEST)
-            } else {
                 navigateToCallDetails(leadEntry._id)
-            }
+
         }
 
         binding.rvLeads.apply {

@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.tele.crm.R
 import com.tele.crm.data.network.ApiCallingState
 import com.tele.crm.databinding.FragmentCallBinding
+import com.tele.crm.presentation.lead.LeadsAdapter
 import com.tele.crm.utils.extension.hideProgress
 import com.tele.crm.utils.extension.showProgress
 import com.tele.crm.utils.extension.showToast
@@ -22,7 +25,7 @@ class CallFragment : Fragment() {
 
     private lateinit var binding: FragmentCallBinding
     private val viewModel: CallViewModel by viewModels()
-    private val callsAdapter = CallsAdapter()
+    lateinit var callsAdapter : CallsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +37,12 @@ class CallFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        callsAdapter = CallsAdapter { call ->
+            val bundle = Bundle().apply {
+                putString("leadId", call.leadId)
+            }
+            findNavController().navigate(R.id.action_callFragment_to_CallDetailsFragment, bundle)
+        }
         binding.rvCalls.adapter = callsAdapter
         binding.rvCalls.layoutManager = LinearLayoutManager(context)
 

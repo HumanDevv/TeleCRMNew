@@ -8,7 +8,7 @@
     tools:context=".presentation.call.CallFragment">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_40sdp"
         app:layout_constraintTop_toTopOf="parent"
         android:background="@color/white"
         android:id="@+id/layout_header">
@@ -43,6 +43,8 @@
         android:id="@+id/rvCalls"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_5sdp"
+
         app:layout_constraintTop_toBottomOf="@+id/layout_header"
         app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
