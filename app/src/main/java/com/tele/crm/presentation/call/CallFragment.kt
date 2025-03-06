@@ -59,11 +59,12 @@ class CallFragment : Fragment() {
 
                 is ApiCallingState.Success -> {
                     hideProgress()
-                    if (it.value != null) {
+                    if (it.value.data.isNotEmpty()) {
                         callsAdapter.submitList(it.value.data?: emptyList())
 
                     } else {
-                        showToast("Empty List")
+                        binding.rvCalls.visibility=View.GONE
+                        binding.layoutNoitem.root.visibility=View.VISIBLE
                     }
                 }
 

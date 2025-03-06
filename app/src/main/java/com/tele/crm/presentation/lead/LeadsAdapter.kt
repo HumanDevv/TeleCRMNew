@@ -42,10 +42,10 @@ class LeadsAdapter(private val listener: (Data) -> Unit) : RecyclerView.Adapter<
             } else {
                 binding.tvStream.visibility = View.GONE
             }
-            if (lead.interested_in != "") {
+            if (lead.year != "") {
                 binding.tvInterested.visibility = View.VISIBLE
 
-                binding.tvInterested.text = lead.interested_in
+                binding.tvInterested.text = lead.year
 
             } else {
                 binding.tvInterested.visibility = View.GONE

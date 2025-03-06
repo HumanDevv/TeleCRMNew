@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "625599125428",
+    "project_id": "telecrm-dd75d",
+    "storage_bucket": "telecrm-dd75d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625599125428:android:4ac94dfffb00f3a1db44e1",
+        "android_client_info": {
+          "package_name": "com.tele.crm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN5qLlv7-CXYWokhA9cEq0iqcHLkKgwaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

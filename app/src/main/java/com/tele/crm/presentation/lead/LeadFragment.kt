@@ -66,10 +66,12 @@ class LeadFragment : Fragment() {
             }
         })
         leadsAdapter = LeadsAdapter { leadEntry ->
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(Manifest.permission.READ_CALL_LOG), CALL_LOG_PERMISSION_REQUEST)
+            } else {
                 navigateToCallDetails(leadEntry._id)
-
+            }
         }
-
         binding.rvLeads.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = leadsAdapter
@@ -122,11 +124,18 @@ class LeadFragment : Fragment() {
                     hideProgress()
 
                     if (it.value.success) {
-                        leadsAdapter.submitList(it.value.data)
-
+                        if (it.value.data.isNotEmpty()) {
+                            leadsAdapter.submitList(it.value.data)
+                        }
+                        else{
+                            binding.layoutNoitem.root.visibility=View.VISIBLE
+                            binding.rvLeads.visibility=View.GONE
+                        }
                     }
+
                     else {
-                        showToast(it.value.message)
+                        binding.layoutNoitem.root.visibility=View.VISIBLE
+                        binding.rvLeads.visibility=View.GONE
                     }
 
                 }

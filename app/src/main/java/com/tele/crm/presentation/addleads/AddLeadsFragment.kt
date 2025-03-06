@@ -60,10 +60,11 @@ class AddLeadsFragment : Fragment() {
         viewModel.getYear()
 
         type = arguments?.getString("type").toString()
-        Log.d("ASdfasfasdf",type)
         if (type == "detail" || type == "edit") {
             lead = arguments?.getParcelable("lead_data")!!
             populateLeadData(lead)
+            Log.d("ASdfasfasdf",lead.toString())
+
         }
 
         handleUIBasedOnType()
@@ -131,7 +132,7 @@ class AddLeadsFragment : Fragment() {
             tvYear.text = lead.year
             address.setText(lead.address)
             collegeName.setText(lead.college_name)
-            date.text = getFormattedTimestamp(lead.createdAt)
+            date.text = getFormattedTimestamp(lead.createdAt?:"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             tvInterested.text = lead.interested_in
         }
     }
@@ -163,7 +164,7 @@ date.text= getCurrentDate()
 
             else{
                     viewModel.updateLeadApi(
-                        lead._id,
+                        lead._id?:"",
                         AddLeadRequest(
                             name = etName.text.toString(),
                             mobile = etMobile.text.toString(),

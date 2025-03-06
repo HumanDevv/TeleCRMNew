@@ -77,7 +77,8 @@ class CampaignFragment : Fragment() {
 
                     }
                     else {
-                        showToast(it.value.message)
+                        binding.rvCampaign.visibility=View.GONE
+                        binding.layoutNoitem.root.visibility=View.VISIBLE
                     }
                 }
 

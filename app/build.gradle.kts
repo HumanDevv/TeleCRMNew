@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.hiltDagger)
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 
 }
 
@@ -89,5 +91,8 @@ dependencies {
     implementation ("androidx.viewpager2:viewpager2:1.1.0")
 
     implementation("ir.mahozad.android:pie-chart:0.7.0")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-crashlytics")
 
 }

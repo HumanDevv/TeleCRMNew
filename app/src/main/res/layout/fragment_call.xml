@@ -47,4 +47,8 @@
 
         app:layout_constraintTop_toBottomOf="@+id/layout_header"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <include layout="@layout/no_item_layout"
+        android:id="@+id/layout_noitem"
+        android:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

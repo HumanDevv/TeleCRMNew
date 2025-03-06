@@ -4,9 +4,11 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.net.Uri
 import android.text.Layout
 import android.text.Spannable
 import android.text.SpannableString
@@ -22,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageView
@@ -385,4 +388,20 @@ fun String.containsHtml(): Boolean {
     val htmlPattern = ".*\\<[^>]+>.*"
     return this.matches(htmlPattern.toRegex())
 }
+
+fun Context.openWhatsAppChat(phoneNumber: String, message: String) {
+    // Ensure the phone number starts with +91
+    val formattedPhoneNumber = if (phoneNumber.startsWith("+91")) phoneNumber else "+91$phoneNumber"
+
+    val url = "https://api.whatsapp.com/send?phone=$formattedPhoneNumber&text=${Uri.encode(message)}"
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+
+    try {
+        startActivity(intent)
+    } catch (e: Exception) {
+        Toast.makeText(this, "Error opening WhatsApp!", Toast.LENGTH_SHORT).show()
+    }
+}
+
+
 

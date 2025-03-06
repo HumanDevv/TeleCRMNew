@@ -1,12 +1,18 @@
 package com.tele.crm.presentation.callDetails
 
 import Lead
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.telephony.PhoneStateListener
+import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
@@ -26,9 +32,11 @@ import com.tele.crm.presentation.call.CallViewModel
 import com.tele.crm.presentation.campaign.CampaignViewModel
 import com.tele.crm.utils.CampaignBottomSheet
 import com.tele.crm.utils.MetaItemBottomSheet
+import com.tele.crm.utils.extension.CallLogItem
 import com.tele.crm.utils.extension.fragmentScope
 import com.tele.crm.utils.extension.getCallLogsForNumber
 import com.tele.crm.utils.extension.hideProgress
+import com.tele.crm.utils.extension.openWhatsAppChat
 import com.tele.crm.utils.extension.setDebouncedOnClickListener
 import com.tele.crm.utils.extension.showProgress
 import com.tele.crm.utils.extension.showToast
@@ -58,6 +66,8 @@ class CallDetailsFragment : Fragment() {
         "Lost",
     )
     lateinit var lead:Lead
+    private var isCallDetailsSent = false // Flag to track if call details have been sent
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -72,6 +82,8 @@ class CallDetailsFragment : Fragment() {
             leadId = it.getString("leadId")!!
 
         }
+        val isFirstTime = SharedPrefs.getIsFirstTime(requireContext())
+
         observeAddLeadToCampaignApi()
         observeAddActivityApi()
         observeUpdateLeadStatusApi()
@@ -87,7 +99,9 @@ class CallDetailsFragment : Fragment() {
         observerGetCampaignResponse()
         observeUpdateRemarkApi()
         handleClicks()
-
+        if (isFirstTime) {
+            SharedPrefs.saveIsFirstTime(requireContext(), false)
+        }
     }
 
     private fun handleClicks() {
@@ -112,14 +126,14 @@ class CallDetailsFragment : Fragment() {
                 }
             }
 
-
+/*
             ivCall.setOnClickListener {
                 val randomDuration = Random.nextInt(0, 121).toString()
 
                 viewModel.addActivity(
                     activtiyAddRequest(leadId,randomDuration,"","connected","outgoing")
                 )
-            }
+            }*/
             tvStatus.setOnClickListener {
                 showStatusItemBottomSheet(statusList) { selectedItem ->
                     binding.tvStatus.text = selectedItem
@@ -128,21 +142,21 @@ class CallDetailsFragment : Fragment() {
                 }
             }
 
-       /*     ivCall.setOnClickListener {
+            ivCall.setOnClickListener {
                 val phoneNumber = binding.tvMobile.text.toString()
-                val dialIntent = Intent(Intent.ACTION_DIAL).apply {
-                    data = Uri.parse("tel:$phoneNumber")
-                }
-                startActivity(dialIntent)
-            }*/
+                makeCallFromDialer(phoneNumber)
+            }
+            ivWhatsapp.setOnClickListener {
+                val phoneNumber = binding.tvMobile.text.toString()
+                requireActivity().openWhatsAppChat(phoneNumber,"This is the dummy message")
+            }
             showLeadInfo.setOnClickListener {
                 val bundle = Bundle().apply {
                     putParcelable("lead_data", lead)
                     putString("type","detail")
                 }
-                findNavController().navigate(R.id.action_CallDetailsFragment_to_addLeadsFragment,bundle, NavOptions.Builder()
-                    .setPopUpTo(R.id.CallDetailsFragment, false)
-                    .build())
+                Log.d("leaddsdsd",lead.toString())
+                findNavController().navigate(R.id.action_CallDetailsFragment_to_addLeadsFragment,bundle)
             }
 
         }
@@ -160,20 +174,32 @@ class CallDetailsFragment : Fragment() {
 
                 is ApiCallingState.Success -> {
                     hideProgress()
-                    binding.layoutMain.visibility=View.VISIBLE
-                    binding.layoutNoitem.root.visibility=View.GONE
+                    binding.layoutMain.visibility = View.VISIBLE
+                    binding.layoutNoitem.root.visibility = View.GONE
                     if (it.value != null) {
-                        binding.tvName.text=it.value.data.lead.name
-                        binding.tvMobile.text=it.value.data.lead.mobile
-                        binding.tvStatus.text=it.value.data.lead.status
-                        binding.initialsTextView.text=getInitials(it.value.data.lead.name)
-                        lead= it.value.data.lead
+                        binding.tvName.text = it.value.data.lead.name
+                        binding.tvMobile.text = it.value.data.lead.mobile
+                        binding.tvStatus.text = it.value.data.lead.status
+                        binding.initialsTextView.text = getInitials(it.value.data.lead.name?:"")
+                        lead = it.value.data.lead
                         it.value?.data?.lead?.campaigns?.let { campaigns ->
                             campaignIdList.clear()
                             campaignIdList.addAll(campaigns.map { campaign -> campaign.id })
                         }
                         callsAdapter.submitList(it.value.data.callLogs)
 
+                        val callLogs = getCallLogsForNumber(requireActivity(), it.value.data.lead.mobile?:"")
+
+                        if (callLogs.isNotEmpty()) {
+                            val mostRecentCall = callLogs[0]
+                            // Check if the details have changed before sending to the API
+                            if (hasCallDetailsChanged(mostRecentCall)) {
+                                if (!SharedPrefs.getIsFirstTime(requireContext())) {
+
+                                    sendCallDetailsToApi(mostRecentCall)
+                                }
+                            }
+                        }
                     } else {
                         showToast("Empty List")
                     }
@@ -181,8 +207,8 @@ class CallDetailsFragment : Fragment() {
 
                 is ApiCallingState.Failure -> {
                     hideProgress()
-                    binding.layoutMain.visibility=View.GONE
-                    binding.layoutNoitem.root.visibility=View.VISIBLE
+                    binding.layoutMain.visibility = View.GONE
+                    binding.layoutNoitem.root.visibility = View.VISIBLE
                     showToast(it.throwable.message.toString())
                 }
 
@@ -191,7 +217,30 @@ class CallDetailsFragment : Fragment() {
         }.launchIn(lifecycleScope)
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getCallLogs(leadId)
+    }
+    private fun sendCallDetailsToApi(call: CallLogItem) {
+        viewModel.addActivity(
+            activtiyAddRequest(
+                leadId = leadId,
+                duration = call.duration.toString(),
+                remarks = "",
+                status = call.type, // Assuming type is incoming, outgoing, etc.
+                outcome = "connected" // You can add more logic here to determine the outcome
+            )
+        )
 
+        // Save the latest call details to SharedPreferences to avoid redundant calls
+        SharedPrefs.saveLastCallDetails(call.toString(), context = requireContext())
+    }
+
+    private fun hasCallDetailsChanged(call: CallLogItem): Boolean {
+        // Check if the current call details are different from the last sent call details
+        val lastSentData = SharedPrefs.getLastCallDetails(requireActivity())
+        return lastSentData == null || lastSentData != call.toString()
+    }
     private fun getInitials(name: String): String {
         val firstName = name.split(" ").firstOrNull() ?: ""
 
@@ -258,6 +307,17 @@ class CallDetailsFragment : Fragment() {
             }
         }.launchIn(fragmentScope)
     }
+
+    private fun makeCallFromDialer(phoneNumber: String) {
+        val intent = Intent(Intent.ACTION_DIAL).apply {
+            data = Uri.parse("tel:$phoneNumber")
+        }
+        startActivity(intent)
+
+        // Save the dialed number to track only calls made from the app
+        SharedPrefs.saveLastDialedNumber(phoneNumber, requireActivity())
+    }
+
     private fun observeUpdateLeadStatusApi() {
         viewModel.updateLeadStatus.onEach {
             when (it) {
@@ -342,4 +402,41 @@ class CallDetailsFragment : Fragment() {
     }
 
 }
+object SharedPrefs {
+    fun saveLastCallDetails(call: String, context: Context) {
+        val prefs = context.getSharedPreferences("CallPrefs", Context.MODE_PRIVATE)
+        prefs.edit().putString("last_call_details", call).apply()
+    }
 
+    fun getLastCallDetails(context: Context): String? {
+        val prefs = context.getSharedPreferences("CallPrefs", Context.MODE_PRIVATE)
+        return prefs.getString("last_call_details", null)
+    }
+
+    fun saveLastDialedNumber(number: String, context: Context) {
+        val prefs = context.getSharedPreferences("CallPrefs", Context.MODE_PRIVATE)
+        prefs.edit().putString("last_dialed", number).apply()
+    }
+
+    fun getLastDialedNumber(context: Context): String? {
+        val prefs = context.getSharedPreferences("CallPrefs", Context.MODE_PRIVATE)
+        return prefs.getString("last_dialed", null)
+    }
+
+    fun saveIsFirstTime(context: Context, isFirstTime: Boolean) {
+        val prefs = context.getSharedPreferences("CallPrefs", Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("is_first_time", isFirstTime).apply()
+    }
+
+    // Retrieve whether it's the first time or not
+    fun getIsFirstTime(context: Context): Boolean {
+        val prefs = context.getSharedPreferences("CallPrefs", Context.MODE_PRIVATE)
+        return prefs.getBoolean("is_first_time", true)
+    }
+
+    // Reset the flag after API call success
+    fun resetIsFirstTime(context: Context) {
+        val prefs = context.getSharedPreferences("CallPrefs", Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("is_first_time", false).apply()
+    }
+}

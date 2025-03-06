@@ -377,10 +377,10 @@ fun getCallLogsForNumber(context: Context, phoneNumber: String): List<CallLogIte
             val timestamp = it.getLong(dateIndex) // Get timestamp
 
             val type = when (it.getInt(typeIndex)) {
-                CallLog.Calls.INCOMING_TYPE -> "Incoming"
-                CallLog.Calls.OUTGOING_TYPE -> "Outgoing"
-                CallLog.Calls.MISSED_TYPE -> "Missed"
-                CallLog.Calls.REJECTED_TYPE -> "Rejected"
+                CallLog.Calls.INCOMING_TYPE -> "incoming"
+                CallLog.Calls.OUTGOING_TYPE -> "outgoing"
+                CallLog.Calls.MISSED_TYPE -> "missed"
+                CallLog.Calls.REJECTED_TYPE -> "rejected"
                 else -> "Unknown"
             }
 
